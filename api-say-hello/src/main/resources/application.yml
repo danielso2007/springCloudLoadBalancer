@@ -1,0 +1,9 @@
+spring:
+  application:
+    name: api-say-hello
+  profiles:
+    active:
+    - prod
+
+server:
+  port: 8191

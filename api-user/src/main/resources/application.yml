@@ -1,0 +1,9 @@
+spring:
+  application:
+    name: api-user
+  profiles:
+    active:
+    - prod
+
+server:
+  port: 8881
