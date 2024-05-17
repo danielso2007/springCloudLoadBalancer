@@ -1,0 +1,167 @@
+# This workflow will build a package using Maven and then publish it to GitHub packages when a release is created
+# For more information see: https://github.com/actions/setup-java/blob/main/docs/advanced-usage.md#apache-maven-with-a-settings-path
+
+name: Teste do projeto
+
+on:
+  push:
+    branches: [ "main", "release/**" ]
+    tags:        
+    - v*
+    paths-ignore:
+    - '**.md'
+    - '**.sh'
+    - '**.json'
+  pull_request:
+    branches: [ "main", "release/**" ]
+    tags:        
+    - v*
+    paths-ignore:
+    - '**.md'
+    - '**.sh'
+    - '**.json'
+
+jobs:
+  checkstyle-api-say-hello:
+    runs-on: ubuntu-latest
+    steps:
+    - uses: actions/checkout@v4
+    - name: Set up JDK 22
+      uses: actions/setup-java@v3
+      with:
+        java-version: '22'
+        distribution: 'temurin'
+        cache: maven
+    - name: Verificando checkstyle
+      run: mvn checkstyle:check -pl api-say-hello -Dmaven.test.skip=true
+
+  pmd-api-say-hello:
+    needs: ["checkstyle-api-say-hello"]
+    runs-on: ubuntu-latest
+    steps:
+    - uses: actions/checkout@v4
+    - name: Set up JDK 22
+      uses: actions/setup-java@v3
+      with:
+        java-version: '22'
+        distribution: 'temurin'
+        cache: maven
+    - name: Verificando PMD
+      run: mvn pmd:check -pl api-say-hello -Dmaven.test.skip=true
+
+  spotbugs-api-say-hello:
+    needs: ["pmd-api-say-hello"]
+    runs-on: ubuntu-latest
+    steps:
+    - uses: actions/checkout@v4
+    - name: Set up JDK 22
+      uses: actions/setup-java@v3
+      with:
+        java-version: '22'
+        distribution: 'temurin'
+        cache: maven
+    - name: Verificando spotbugs
+      run: mvn spotbugs:check -pl api-say-hello -Dmaven.test.skip=true
+
+  test-api-say-hello:
+    needs: ["spotbugs-api-say-hello"]
+    runs-on: ubuntu-latest
+    steps:
+    - uses: actions/checkout@v4
+    - name: Set up JDK 22
+      uses: actions/setup-java@v3
+      with:
+        java-version: '22'
+        distribution: 'temurin'
+        cache: maven
+
+    - name: Teste do projeto
+      run: mvn -B test -pl api-say-hello
+
+  build-api-say-hello:
+    needs: ["test-api-say-hello"]
+    runs-on: ubuntu-latest
+    steps:
+    - uses: actions/checkout@v4
+    - name: Set up JDK 22
+      uses: actions/setup-java@v3
+      with:
+        java-version: '22'
+        distribution: 'temurin'
+        cache: maven
+
+    - name: Build do projeto
+      run: mvn -B package -pl api-say-hello -Dmaven.test.skip=true
+
+# ---------------------------------------
+  checkstyle-api-user:
+    runs-on: ubuntu-latest
+    steps:
+    - uses: actions/checkout@v4
+    - name: Set up JDK 22
+      uses: actions/setup-java@v3
+      with:
+        java-version: '22'
+        distribution: 'temurin'
+        cache: maven
+    - name: Verificando checkstyle
+      run: mvn checkstyle:check -pl api-user -Dmaven.test.skip=true
+
+  pmd-api-user:
+    needs: ["checkstyle-api-user"]
+    runs-on: ubuntu-latest
+    steps:
+    - uses: actions/checkout@v4
+    - name: Set up JDK 22
+      uses: actions/setup-java@v3
+      with:
+        java-version: '22'
+        distribution: 'temurin'
+        cache: maven
+    - name: Verificando PMD
+      run: mvn pmd:check -pl api-user -Dmaven.test.skip=true
+
+  spotbugs-api-user:
+    needs: ["pmd-api-user"]
+    runs-on: ubuntu-latest
+    steps:
+    - uses: actions/checkout@v4
+    - name: Set up JDK 22
+      uses: actions/setup-java@v3
+      with:
+        java-version: '22'
+        distribution: 'temurin'
+        cache: maven
+    - name: Verificando spotbugs
+      run: mvn spotbugs:check -pl api-user -Dmaven.test.skip=true
+
+  test-api-user:
+    needs: ["spotbugs-api-user"]
+    runs-on: ubuntu-latest
+    steps:
+    - uses: actions/checkout@v4
+    - name: Set up JDK 22
+      uses: actions/setup-java@v3
+      with:
+        java-version: '22'
+        distribution: 'temurin'
+        cache: maven
+
+    - name: Teste do projeto
+      run: mvn -B test -pl api-user
+
+  build-api-user:
+    needs: ["test-api-user"]
+    runs-on: ubuntu-latest
+    steps:
+    - uses: actions/checkout@v4
+    - name: Set up JDK 22
+      uses: actions/setup-java@v3
+      with:
+        java-version: '22'
+        distribution: 'temurin'
+        cache: maven
+
+    - name: Build do projeto
+      run: mvn -B package -pl api-user -Dmaven.test.skip=true
+# ---------------------------------------

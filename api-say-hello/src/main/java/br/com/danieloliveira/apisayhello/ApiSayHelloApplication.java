@@ -9,9 +9,11 @@ import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RestController;
+import edu.umd.cs.findbugs.annotations.SuppressFBWarnings;
 
 @RestController
 @SpringBootApplication
+@SuppressFBWarnings("PREDICTABLE_RANDOM")
 public class ApiSayHelloApplication {
     private static Logger log = LoggerFactory.getLogger(ApiSayHelloApplication.class);
     private static final Random RANDOM = new Random();

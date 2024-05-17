@@ -53,11 +53,11 @@ class UserApplicationTests {
         ResponseEntity<String> response3 = testRestTemplate.getForEntity("http://localhost:" + port + "/hello",
                 String.class);
         then(response1.getStatusCode()).isEqualTo(HttpStatus.OK);
-        then(response1.getBody()).isEqualTo("1, Mary!");
+        then(response1.getBody()).isEqualTo("ok, Mary!");
         then(response2.getStatusCode()).isEqualTo(HttpStatus.OK);
-        then(response2.getBody()).isEqualTo("2, Mary!");
+        then(response2.getBody()).isEqualTo("ok, Mary!");
         then(response3.getStatusCode()).isEqualTo(HttpStatus.OK);
-        then(response3.getBody()).isEqualTo("3, John!");
+        then(response3.getBody()).isEqualTo("1, John!");
     }
 
     private ConfigurableApplicationContext startApp(int port) {

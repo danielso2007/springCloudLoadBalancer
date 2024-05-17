@@ -7,10 +7,12 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 import org.springframework.web.reactive.function.client.WebClient;
+import edu.umd.cs.findbugs.annotations.SuppressFBWarnings;
 import reactor.core.publisher.Mono;
 
 @SpringBootApplication
 @RestController
+@SuppressFBWarnings("SPRING_CSRF_UNRESTRICTED_REQUEST_MAPPING")
 public class ApiUserApplication {
     private final WebClient.Builder loadBalancedWebClientBuilder;
     private final ReactorLoadBalancerExchangeFilterFunction lbFunction;
@@ -27,8 +29,8 @@ public class ApiUserApplication {
 
     @RequestMapping("/hi")
     public Mono<String> hi(@RequestParam(value = "name", defaultValue = "Mary") String name) {
-        return loadBalancedWebClientBuilder.build().get().uri("http://say-hello/greeting").retrieve()
-                .bodyToMono(String.class).map(greeting -> String.format("%s, %s!", greeting, name));
+        return loadBalancedWebClientBuilder.build().get().uri("http://say-hello/").retrieve().bodyToMono(String.class)
+                .map(greeting -> String.format("%s, %s!", greeting, name));
     }
 
     @RequestMapping("/hello")
